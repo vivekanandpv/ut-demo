@@ -1,38 +1,29 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
 import { DemoService } from './demo.service';
 
 describe('DemoService', () => {
   let service: DemoService;
+  let httpClient: HttpClient;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DemoService);
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule],
+    });
+    httpClient = TestBed.inject(HttpClient);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('#emitNextScoreResolve should resolve the number (classic)', (done: DoneFn) => {
-    const score = 123;
-    service.emitNextScoreResolve(score).then((v) => {
-      expect(v).toBe(score);
+  it('#getTodos should return actual array from api', (done: DoneFn) => {
+    service = new DemoService(httpClient);
+    service.getTodos().subscribe((v) => {
+      expect(v).toBeInstanceOf(Array);
+      expect(v.length).toBe(200);
       done();
     });
-  });
-
-  it('#emitNextScoreResolve should resolve the number (async version)', async () => {
-    const score = 123;
-    await expectAsync(service.emitNextScoreResolve(score)).toBeResolvedTo(
-      score
-    );
-  });
-
-  it('#emitNextScoreReject should reject the promise (async version)', async () => {
-    const score = 123;
-    await expectAsync(service.emitNextScoreReject(score)).toBeRejectedWithError(
-      'Oops!'
-    );
   });
 });

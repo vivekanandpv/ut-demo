@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 
@@ -5,15 +6,10 @@ import { BehaviorSubject, of } from 'rxjs';
   providedIn: 'root',
 })
 export class DemoService {
-  emitNextScoreResolve(s: number): Promise<number> {
-    return new Promise((resolve, reject) => {
-      resolve(s);
-    });
-  }
+  private url = 'https://jsonplaceholder.typicode.com/todos';
+  constructor(private httpClient: HttpClient) {}
 
-  emitNextScoreReject(s: number): Promise<number> {
-    return new Promise((resolve, reject) => {
-      reject(new Error('Oops!'));
-    });
+  getTodos() {
+    return this.httpClient.get<any[]>(this.url);
   }
 }

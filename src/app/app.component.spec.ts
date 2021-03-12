@@ -16,16 +16,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should have initial counter as zero', () => {
+  it('should have initial counter as provided', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const instance = fixture.componentInstance;
-    expect(instance.counter).toBe(0);
-  });
-
-  it('#increment should increment the counter', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const instance = fixture.componentInstance;
-    instance.increment();
-    expect(instance.counter).toBe(1);
+    instance.counter = 101;
+    expect(instance.counter).toBe(101);
   });
 });

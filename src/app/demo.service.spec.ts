@@ -11,13 +11,19 @@ describe('DemoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('#getTodos should return result from the stub', (done: DoneFn) => {
+  it('#getTodos should relay the call to the mock', (done: DoneFn) => {
     const httpClientStub = jasmine.createSpyObj('HttpClient', ['get']);
-    httpClientStub.get.and.returnValue(of([]));
+    const resultArray = [1, 2, 3];
+    httpClientStub.get.and.returnValue(of(resultArray));
     service = new DemoService(httpClientStub);
     service.getTodos().subscribe((v) => {
-      expect(v).toBeInstanceOf(Array);
-      done();
+      expect(httpClientStub.get.calls.count()).toBe(1);
+      httpClientStub.get.calls
+        .mostRecent()
+        .returnValue.subscribe((r: any[]) => {
+          expect(r).toBe(resultArray);
+          done();
+        });
     });
   });
 });

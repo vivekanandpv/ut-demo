@@ -7,8 +7,5 @@ import { DemoService } from './demo.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  message: string;
-  constructor(private demoService: DemoService) {
-    this.message = demoService.getMessage();
-  }
+  @Input() message!: string;
 }

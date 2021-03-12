@@ -1,26 +1,18 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DemoService {
-  private scores: number[] = [];
+  private currentScoreSubject = new BehaviorSubject<number>(0);
+  currentScore$ = this.currentScoreSubject.asObservable();
+
+  title$ = of('Hi there!');
 
   constructor() {}
 
-  computeSimpleInterest(p: number, t: number, r: number): number {
-    return (p * t * r) / 100.0;
-  }
-
-  computeAreaOfCircle(r: number): number {
-    throw new Error('Oops!');
-  }
-
-  getScores(): number[] {
-    return this.scores;
-  }
-
-  addScore(s: number): void {
-    this.scores.push(s);
+  emitNextValue(v: number) {
+    this.currentScoreSubject.next(v);
   }
 }

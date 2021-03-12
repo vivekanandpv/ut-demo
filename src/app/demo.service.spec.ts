@@ -14,23 +14,19 @@ describe('DemoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should compute simple interest', () => {
-    expect(service.computeSimpleInterest(100, 1, 10)).toEqual(10);
+  it('#title$ should return value from observable', (done: DoneFn) => {
+    service.title$.subscribe((v) => {
+      expect(v).toBe('Hi there!');
+      done();
+    });
   });
 
-  it('should throw error when compute area of circle is called', () => {
-    //  write a lambda for expect
-    expect(() => service.computeAreaOfCircle(2)).toThrowError('Oops!');
-  });
-
-  it('should have initial scores array to be empty', () => {
-    expect(service.getScores().length).toEqual(0);
-  });
-
-  it('should add score to the scores', () => {
-    const score = 120;
-    service.addScore(score);
-    expect(service.getScores().length).toEqual(1);
-    expect(service.getScores()[0]).toEqual(score);
+  it('#currentScore$ should emit the new value set', (done: DoneFn) => {
+    const value = 120;
+    service.emitNextValue(value);
+    service.currentScore$.subscribe((v) => {
+      expect(v).toBe(value);
+      done();
+    });
   });
 });

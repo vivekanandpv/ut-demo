@@ -1,13 +1,33 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { DemoService } from './demo.service';
+
+const baseMessage = 'some message from mock';
+
+class MockDemoService {
+  val = baseMessage;
+
+  getMessage(): string {
+    return this.val.toUpperCase();
+  }
+}
 
 describe('AppComponent', () => {
+  let comp: AppComponent;
+  let service: DemoService;
+
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [AppComponent],
-    }).compileComponents();
+      providers: [
+        AppComponent,
+        { provide: DemoService, useClass: MockDemoService },
+      ],
+    });
+
+    comp = TestBed.inject(AppComponent);
+    service = TestBed.inject(DemoService);
   });
 
   it('should create the app', () => {
@@ -16,15 +36,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should emit the new count on increment', () => {
+  it('should have the message as provided by the mock', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const instance = fixture.componentInstance;
-    const inputValue = 101;
-    instance.counter = inputValue;
-    instance.inc.subscribe((v) => {
-      expect(v).toBe(inputValue + 1);
-    });
 
-    instance.increment();
+    expect(instance.message).toBe(baseMessage.toUpperCase());
   });
 });

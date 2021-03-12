@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DemoService } from './demo.service';
 
 @Component({
   selector: 'app-root',
@@ -6,11 +7,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  @Input() counter: number = 0;
-  @Output() inc = new EventEmitter<number>();
-
-  increment() {
-    ++this.counter;
-    this.inc.emit(this.counter);
+  message: string;
+  constructor(private demoService: DemoService) {
+    this.message = demoService.getMessage();
   }
 }

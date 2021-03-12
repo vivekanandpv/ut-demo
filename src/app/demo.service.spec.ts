@@ -8,10 +8,16 @@ describe('DemoService', () => {
   let httpClient: HttpClient;
 
   beforeEach(() => {
+    //  The TestBed is the most important of the Angular testing utilities.
+    //  The TestBed creates a dynamically - constructed Angular test module
+    //  that emulates an Angular @NgModule.
+
+    //  The TestBed.configureTestingModule() method takes a metadata object
+    //  that can have most of the properties of an @NgModule.
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
     });
-    httpClient = TestBed.inject(HttpClient);
+    httpClient = TestBed.inject(HttpClient); //TestBed.get() was deprecated as of Angular version 9.
   });
 
   it('should be created', () => {

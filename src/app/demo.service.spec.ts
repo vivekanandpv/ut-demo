@@ -11,9 +11,10 @@ describe('DemoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('#getTodos should return result from mock', (done: DoneFn) => {
-    const mockHttpClient = { get: (url: string) => of([]) };
-    service = new DemoService(mockHttpClient as HttpClient);
+  it('#getTodos should return result from the stub', (done: DoneFn) => {
+    const httpClientStub = jasmine.createSpyObj('HttpClient', ['get']);
+    httpClientStub.get.and.returnValue(of([]));
+    service = new DemoService(httpClientStub);
     service.getTodos().subscribe((v) => {
       expect(v).toBeInstanceOf(Array);
       done();

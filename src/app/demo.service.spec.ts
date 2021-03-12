@@ -14,19 +14,25 @@ describe('DemoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('#title$ should return value from observable', (done: DoneFn) => {
-    service.title$.subscribe((v) => {
-      expect(v).toBe('Hi there!');
+  it('#emitNextScoreResolve should resolve the number (classic)', (done: DoneFn) => {
+    const score = 123;
+    service.emitNextScoreResolve(score).then((v) => {
+      expect(v).toBe(score);
       done();
     });
   });
 
-  it('#currentScore$ should emit the new value set', (done: DoneFn) => {
-    const value = 120;
-    service.emitNextValue(value);
-    service.currentScore$.subscribe((v) => {
-      expect(v).toBe(value);
-      done();
-    });
+  it('#emitNextScoreResolve should resolve the number (async version)', async () => {
+    const score = 123;
+    await expectAsync(service.emitNextScoreResolve(score)).toBeResolvedTo(
+      score
+    );
+  });
+
+  it('#emitNextScoreReject should reject the promise (async version)', async () => {
+    const score = 123;
+    await expectAsync(service.emitNextScoreReject(score)).toBeRejectedWithError(
+      'Oops!'
+    );
   });
 });

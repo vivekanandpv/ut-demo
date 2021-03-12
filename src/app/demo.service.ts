@@ -5,14 +5,15 @@ import { BehaviorSubject, of } from 'rxjs';
   providedIn: 'root',
 })
 export class DemoService {
-  private currentScoreSubject = new BehaviorSubject<number>(0);
-  currentScore$ = this.currentScoreSubject.asObservable();
+  emitNextScoreResolve(s: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      resolve(s);
+    });
+  }
 
-  title$ = of('Hi there!');
-
-  constructor() {}
-
-  emitNextValue(v: number) {
-    this.currentScoreSubject.next(v);
+  emitNextScoreReject(s: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      reject(new Error('Oops!'));
+    });
   }
 }

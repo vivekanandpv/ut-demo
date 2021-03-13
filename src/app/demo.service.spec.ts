@@ -4,26 +4,30 @@ import { of } from 'rxjs';
 
 import { DemoService } from './demo.service';
 
+//  https://daveceddia.com/jasmine-2-spy-cheat-sheet/
+
 describe('DemoService', () => {
   let service: DemoService;
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('#getTodos should relay the call to the mock', (done: DoneFn) => {
-    const httpClientStub = jasmine.createSpyObj('HttpClient', ['get']);
-    const resultArray = [1, 2, 3];
-    httpClientStub.get.and.returnValue(of(resultArray));
+  it('#create should relay the call to the mock', (done: DoneFn) => {
+    const httpClientStub = jasmine.createSpyObj('HttpClient', ['post']);
+    const result = {
+      message: 'success',
+      status: 201,
+    };
+    const body = { name: 'Learning Angular' };
+    httpClientStub.post.and.returnValue(of(result));
     service = new DemoService(httpClientStub);
-    service.getTodos().subscribe((v) => {
-      expect(httpClientStub.get.calls.count()).toBe(1);
-      httpClientStub.get.calls
-        .mostRecent()
-        .returnValue.subscribe((r: any[]) => {
-          expect(r).toBe(resultArray);
-          done();
-        });
+    service.create(body).subscribe((v) => {
+      expect(httpClientStub.post.calls.count()).toBe(1);
+      const url = httpClientStub.post.calls.mostRecent().args[0];
+      const body = httpClientStub.post.calls.mostRecent().args[1];
+      const config = httpClientStub.post.calls.mostRecent().args[2];
+
+      expect(url).toBe('https://jsonplaceholder.typicode.com/todos');
+      expect(body).toBe(body);
+      expect(config.headers['X-Custom']).toBe('custom value');
+      done();
     });
   });
 });

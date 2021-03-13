@@ -9,7 +9,11 @@ export class DemoService {
   private url = 'https://jsonplaceholder.typicode.com/todos';
   constructor(private httpClient: HttpClient) {}
 
-  getTodos() {
-    return this.httpClient.get<any[]>(this.url);
+  create(form: any) {
+    return this.httpClient.post(this.url, form, {
+      headers: {
+        'X-Custom': 'custom value',
+      },
+    });
   }
 }

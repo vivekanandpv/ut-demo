@@ -25,30 +25,24 @@ describe('AppComponent', () => {
   it('should display the message to the DOM in <p> -- direct', () => {
     //  createComponent() does not bind data!
     const fixture = TestBed.createComponent(AppComponent);
-    const instance = fixture.componentInstance;
-    instance.message = baseMessage;
-
-    fixture.detectChanges(); //  required for binding
-
     const element: HTMLElement = fixture.nativeElement;
     const paragraphElement: HTMLElement = element.querySelector(
       'p'
     ) as HTMLElement;
-    expect(paragraphElement.textContent).toBe(baseMessage);
-  });
-
-  //  assured to run even in SSR
-  it('should display the message to the DOM in <p> -- verbose', () => {
-    //  createComponent() does not bind data!
-    const fixture = TestBed.createComponent(AppComponent);
-    const instance = fixture.componentInstance;
-    instance.message = baseMessage;
+    const buttonElement: HTMLElement = element.querySelector(
+      'button'
+    ) as HTMLElement;
 
     fixture.detectChanges(); //  required for binding
 
-    const debugElement: DebugElement = fixture.debugElement;
-    const paragraphDebugElement: DebugElement = debugElement.query(By.css('p'));
-    const paragraphElement: HTMLElement = paragraphDebugElement.nativeElement;
-    expect(paragraphElement.textContent).toBe(baseMessage);
+    expect(paragraphElement.textContent).toBe('0', 'initial state is not zero');
+
+    buttonElement.dispatchEvent(new Event('click'));
+    fixture.detectChanges(); //  required for binding
+
+    expect(paragraphElement.textContent).toBe(
+      '1',
+      'did not increment to 1 after click'
+    );
   });
 });

@@ -7,5 +7,9 @@ import { DemoService } from './demo.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  @Input() message!: string;
+  count = 0;
+
+  increment() {
+    ++this.count;
+  }
 }

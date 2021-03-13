@@ -7,15 +7,44 @@ import { DemoService } from './demo.service';
 describe('DemoService', () => {
   let service: DemoService;
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   it('#getTodos should return result from mock', (done: DoneFn) => {
-    const mockHttpClient = { get: (url: string) => of([]) };
-    service = new DemoService(mockHttpClient as HttpClient);
-    service.getTodos().subscribe((v) => {
-      expect(v).toBeInstanceOf(Array);
+    const mockHttpClient = {
+      get: (url: string) =>
+        of({
+          invoiceId: 101,
+          customerId: 102,
+          totalAmount: 2500,
+          city: 'Mumbai',
+        }),
+    };
+
+    const restServiceSpy = jasmine.createSpyObj('RestService', [
+      'getInvoice',
+      'getCustomer',
+    ]);
+
+    restServiceSpy.getInvoice.and.returnValue(
+      of({
+        invoiceId: 101,
+        customerId: 102,
+        totalAmount: 2500,
+      })
+    );
+
+    restServiceSpy.getCustomer.and.returnValue(
+      of({
+        invoiceId: 101,
+        customerId: 102,
+        totalAmount: 2500,
+        city: 'Bengaluru',
+      })
+    );
+
+    service = new DemoService(restServiceSpy);
+    service.compose(205).subscribe((v) => {
+      expect(v.city).toBe('Bengaluru');
+      expect(v.customerId).toBe(102);
+      expect(service.totalAmount).toBe(2500);
       done();
     });
   });

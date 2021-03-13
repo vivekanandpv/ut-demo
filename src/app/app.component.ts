@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { DemoService } from './demo.service';
 
 @Component({
@@ -7,9 +8,9 @@ import { DemoService } from './demo.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  count = 0;
+  count$: Observable<number>;
 
-  increment() {
-    ++this.count;
+  constructor(private demoService: DemoService) {
+    this.count$ = this.demoService.getCounter();
   }
 }

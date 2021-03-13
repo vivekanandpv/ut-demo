@@ -1,17 +1,26 @@
 import { DebugElement } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
 import { AppComponent } from './app.component';
 import { DemoService } from './demo.service';
 
-const baseMessage = 'some message from mock';
+const baseCounter = 100;
 
 describe('AppComponent', () => {
   beforeEach(async () => {
+    const demoService = jasmine.createSpyObj('DemoService', ['getCounter']);
+    demoService.getCounter.and.returnValue(of(baseCounter));
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [AppComponent],
+      providers: [
+        {
+          provide: DemoService,
+          useValue: demoService,
+        },
+      ],
     }).compileComponents();
   });
 
@@ -22,27 +31,21 @@ describe('AppComponent', () => {
   });
 
   //  runs only in a browser
-  it('should display the message to the DOM in <p> -- direct', () => {
+  it('should get the async data from service', fakeAsync(() => {
     //  createComponent() does not bind data!
     const fixture = TestBed.createComponent(AppComponent);
     const element: HTMLElement = fixture.nativeElement;
     const paragraphElement: HTMLElement = element.querySelector(
       'p'
     ) as HTMLElement;
-    const buttonElement: HTMLElement = element.querySelector(
-      'button'
-    ) as HTMLElement;
 
     fixture.detectChanges(); //  required for binding
-
-    expect(paragraphElement.textContent).toBe('0', 'initial state is not zero');
-
-    buttonElement.dispatchEvent(new Event('click'));
-    fixture.detectChanges(); //  required for binding
+    tick(); // move to the next tick, in case there is a delay, use tick(delay)
+    fixture.detectChanges();
 
     expect(paragraphElement.textContent).toBe(
-      '1',
-      'did not increment to 1 after click'
+      '100',
+      'async data binding failed'
     );
-  });
+  }));
 });

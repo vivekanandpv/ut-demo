@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DemoService {
-  val = 'hi there!';
   constructor() {}
 
-  getMessage(): string {
-    return this.val.toUpperCase();
+  getCounter() {
+    return of(100);
   }
 }
